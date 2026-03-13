@@ -6,3 +6,6 @@ alembic
 pydantic-settings
 loguru
 python-dotenv
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart

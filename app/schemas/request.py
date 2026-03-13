@@ -7,7 +7,6 @@ class HelpRequestCreate(BaseModel):
     description: Optional[str] = None
     category: Optional[str] = None
     urgency: Literal["low", "medium", "high", "emergency"] = "low"
-    user_id: int
 
 
 class HelpRequestResponse(BaseModel):

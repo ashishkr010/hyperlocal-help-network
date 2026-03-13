@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 class OfferCreate(BaseModel):
     request_id: int
-    offered_by: int
 
 
 class OfferResponse(BaseModel):

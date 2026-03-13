@@ -5,14 +5,15 @@ from app.database import get_db
 from app.models.request import HelpRequest
 from app.models.user import User
 from app.schemas.request import HelpRequestCreate, HelpRequestResponse
+from app.services.auth import get_current_user
 from typing import List, Optional
 
 router = APIRouter(prefix="/requests", tags=["requests"])
 
 
 @router.post("/", response_model=HelpRequestResponse)
-async def create_request(data: HelpRequestCreate, db: AsyncSession = Depends(get_db)):
-    request = HelpRequest(**data.model_dump())
+async def create_request(data: HelpRequestCreate, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    request = HelpRequest(**data.model_dump(), user_id=current_user.id)
     db.add(request)
     await db.commit()
     await db.refresh(request)
@@ -38,7 +39,7 @@ async def get_request(request_id: int, db: AsyncSession = Depends(get_db)):
 
 
 @router.patch("/{request_id}/status", response_model=HelpRequestResponse)
-async def update_status(request_id: int, status: str, db: AsyncSession = Depends(get_db)):
+async def update_status(request_id: int, status: str, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     valid = ["open", "in_progress", "closed"]
     if status not in valid:
         raise HTTPException(status_code=400, detail=f"status must be one of {valid}")
